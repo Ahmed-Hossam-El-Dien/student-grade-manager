@@ -6,7 +6,14 @@
 <body>
     <h1>Add a New Student</h1>
 
+    {% if error %}
+    <p style="color: red; font-weight: bold;">{{ error }}</p>
+    {% endif %}
+
     <form method="POST" action="/add">
+        <label for="student_id">Student ID:</label><br>
+        <input type="number" id="student_id" name="student_id" required min="1"><br><br>
+
         <label for="full_name">Full Name:</label><br>
         <input type="text" id="full_name" name="full_name" required><br><br>
 
