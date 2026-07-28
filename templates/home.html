@@ -1,9 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Student Grade Manager</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Student Grade Manager{% endblock %}
+
+{% block content %}
+<section class="hero">
     <h1>Welcome to the Student Grade Manager</h1>
-</body>
-</html>
+    <p>Keep track of every student's name, age, and grade in one place.</p>
+    <a href="/students" class="btn btn--primary">View Students</a>
+</section>
+{% endblock %}

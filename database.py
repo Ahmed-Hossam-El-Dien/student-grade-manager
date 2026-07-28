@@ -5,6 +5,7 @@ def create_table ():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS students (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id TEXT NOT NULL UNIQUE,
             full_name TEXT NOT NULL,
             age INTEGER NOT NULL,
             grade REAL NOT NULL

@@ -1,17 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Student List</title>
-</head>
-<body>
-    <h1>Student List</h1>
- 
-    <table border="1" cellpadding="6" cellspacing="0">
+{% extends "base.html" %}
+
+{% block title %}Student List{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card__header">
+        <h1>Student List</h1>
+        <a href="/add" class="btn btn--accent">+ Add New Student</a>
+    </div>
+
+    <form method="GET" action="/students" class="search-bar">
+        <input type="text" name="search" placeholder="Search by name or student ID" value="{{ search }}">
+        <button type="submit" class="btn btn--primary">Search</button>
+        <a href="/students" class="btn btn--ghost">Clear</a>
+    </form>
+
+    {% macro sort_link(column, label) %}
+        {% if sort == column and direction == 'asc' %}
+            <a href="/students?search={{ search }}&sort={{ column }}&direction=desc">{{ label }} <span class="sort-arrow">▲</span></a>
+        {% elif sort == column and direction == 'desc' %}
+            <a href="/students?search={{ search }}&sort={{ column }}&direction=asc">{{ label }} <span class="sort-arrow">▼</span></a>
+        {% else %}
+            <a href="/students?search={{ search }}&sort={{ column }}&direction=asc">{{ label }}</a>
+        {% endif %}
+    {% endmacro %}
+
+    <table class="student-table">
         <tr>
-            <th>ID</th>
-            <th>Full Name</th>
-            <th>Age</th>
-            <th>Grade</th>
+            <th>{{ sort_link("id", "ID") }}</th>
+            <th>{{ sort_link("student_id", "Student ID") }}</th>
+            <th>{{ sort_link("full_name", "Full Name") }}</th>
+            <th>{{ sort_link("age", "Age") }}</th>
+            <th>{{ sort_link("grade", "Grade") }}</th>
             <th>Actions</th>
         </tr>
         {% for student in students %}
@@ -20,16 +40,14 @@
             <td>{{ student[1] }}</td>
             <td>{{ student[2] }}</td>
             <td>{{ student[3] }}</td>
-            <td><a href="/edit/{{ student[0] }}">Edit</a></td>
+            <td><span class="grade-badge">{{ student[4] }}</span></td>
+            <td><a href="/edit/{{ student[0] }}" class="btn btn--small">Edit</a></td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="5">No students yet.</td>
+            <td colspan="6" class="empty-row">No students found.</td>
         </tr>
         {% endfor %}
     </table>
- 
-    <br>
-    <a href="/add">Add New Student</a>
-</body>
-</html>
+</div>
+{% endblock %}

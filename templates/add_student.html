@@ -1,32 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Student</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Add Student{% endblock %}
+
+{% block content %}
+<div class="card card--form">
     <h1>Add a New Student</h1>
 
     {% if error %}
-    <p style="color: red; font-weight: bold;">{{ error }}</p>
+    <p class="alert">{{ error }}</p>
     {% endif %}
 
-    <form method="POST" action="/add">
-        <label for="student_id">Student ID:</label><br>
-        <input type="number" id="student_id" name="student_id" required min="1"><br><br>
+    <form method="POST" action="/add" class="form">
+        <label for="full_name">Full Name</label>
+        <input type="text" id="full_name" name="full_name" required>
 
-        <label for="full_name">Full Name:</label><br>
-        <input type="text" id="full_name" name="full_name" required><br><br>
+        <label for="student_id">Student ID</label>
+        <input type="number" id="student_id" name="student_id" required min="1">
 
-        <label for="age">Age:</label><br>
-        <input type="number" id="age" name="age" required min="1"><br><br>
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" required min="1">
 
-        <label for="grade">Grade:</label><br>
-        <input type="number" id="grade" name="grade" required min="0" max="100" step="0.1"><br><br>
+        <label for="grade">Grade</label>
+        <input type="number" id="grade" name="grade" required min="0" max="100" step="0.1">
 
-        <button type="submit">Add Student</button>
+        <button type="submit" class="btn btn--primary">Add Student</button>
     </form>
 
-    <br>
-    <a href="/students">Back to Student List</a>
-</body>
-</html>
+    <a href="/students" class="back-link">Back to Student List</a>
+</div>
+{% endblock %}
