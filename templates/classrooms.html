@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Classrooms{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card__header">
+        <h1>Classrooms</h1>
+    </div>
+
+    <table class="student-table">
+        <tr>
+            <th>Course</th>
+            <th>Teacher</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Students</th>
+            <th>Actions</th>
+        </tr>
+        {% for classroom, student_names in classrooms %}
+        <tr>
+            <td>{{ classroom[1] }} ({{ classroom[2] }})</td>
+            <td>{{ classroom[3] }}</td>
+            <td>{{ classroom[4] }}</td>
+            <td>{{ classroom[5] }} - {{ classroom[6] }}</td>
+            <td>{{ student_names | join(", ") if student_names else "—" }}</td>
+            <td class="actions-cell">
+                <a href="/classrooms/edit/{{ classroom[0] }}" class="btn btn--small">Edit</a>
+                <form method="POST" action="/classrooms/delete/{{ classroom[0] }}" class="confirm-delete" data-confirm-message="Delete this classroom? This cannot be undone.">
+                    <button type="submit" class="btn btn--danger btn--small">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="empty-row">No classrooms scheduled yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

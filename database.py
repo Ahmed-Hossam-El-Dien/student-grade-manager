@@ -1,7 +1,9 @@
 import sqlite3
-def create_table ():
-    connection = sqlite3.connect("Studentdataset.db") # Create the database that we willuse by searching for it to and If it is not found I t will be automatically created
-    cursor = connection.cursor() # Create a cursor object to execute SQL commands
+
+def create_table():
+    connection = sqlite3.connect("Studentdataset.db")
+    cursor = connection.cursor()
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS students (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,10 +13,60 @@ def create_table ():
             grade REAL NOT NULL
         )
     """)
-    connection.commit() # Saves changes permanently to the database
-    connection.close() # Close the connection to the database 
-    print("Database and table created successfully.")
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS teachers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            teacher_id TEXT NOT NULL UNIQUE,
+            full_name TEXT NOT NULL
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS courses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            course_name TEXT NOT NULL,
+            course_code TEXT NOT NULL UNIQUE
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS classrooms (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            course_id INTEGER NOT NULL,
+            teacher_id INTEGER NOT NULL,
+            session_date TEXT NOT NULL,
+            start_time TEXT NOT NULL,
+            end_time TEXT NOT NULL,
+            FOREIGN KEY (course_id) REFERENCES courses (id),
+            FOREIGN KEY (teacher_id) REFERENCES teachers (id)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS student_classrooms (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER NOT NULL,
+            classroom_id INTEGER NOT NULL,
+            FOREIGN KEY (student_id) REFERENCES students (id),
+            FOREIGN KEY (classroom_id) REFERENCES classrooms (id),
+            UNIQUE (student_id, classroom_id)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL,
+            role TEXT NOT NULL CHECK (role IN ('teacher', 'student')),
+            linked_id INTEGER NOT NULL
+        )
+    """)
+
+    connection.commit()
+    connection.close()
+    print("Database and tables created successfully.")
+
 if __name__ == "__main__":
     create_table()
-     # Python gives every file a hidden variable called __name__ when it runs a file. If the file is being run directly, then __name__ will be set to "__main__". If the file is being imported as a module, then __name__ will be set to the name of the module.
-     # Therefore we want it only to create a new data set when we run the file directly not every time we import the file It creates new dataset. 

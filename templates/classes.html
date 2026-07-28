@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Classes{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card__header">
+        <h1>Classes</h1>
+    </div>
+
+    {% if error %}
+    <p class="alert">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="/classes" class="search-bar">
+        <input type="text" name="class_name" placeholder="New class name (e.g. Grade 10A)" required>
+        <button type="submit" class="btn btn--primary">Add Class</button>
+    </form>
+
+    <table class="student-table">
+        <tr>
+            <th>ID</th>
+            <th>Class Name</th>
+        </tr>
+        {% for c in classes %}
+        <tr>
+            <td>{{ c[0] }}</td>
+            <td>{{ c[1] }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="2" class="empty-row">No classes yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Classroom{% endblock %}
+
+{% block content %}
+<div class="card card--form">
+    <h1>Edit Classroom</h1>
+
+    {% if error %}
+    <p class="alert">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="/classrooms/edit/{{ classroom[0] }}" class="form">
+        <label for="course_id">Course</label>
+        <select id="course_id" name="course_id" required>
+            {% for c in courses %}
+            <option value="{{ c[0] }}" {% if c[0] == classroom[1] %}selected{% endif %}>{{ c[1] }} ({{ c[2] }})</option>
+            {% endfor %}
+        </select>
+
+        <label for="teacher_id">Teacher</label>
+        <select id="teacher_id" name="teacher_id" required>
+            {% for t in teachers %}
+            <option value="{{ t[0] }}" {% if t[0] == classroom[2] %}selected{% endif %}>{{ t[2] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="session_date">Date</label>
+        <input type="date" id="session_date" name="session_date" value="{{ classroom[3] }}" required>
+
+        <label for="start_time">Start Time</label>
+        <input type="time" id="start_time" name="start_time" value="{{ classroom[4] }}" required>
+
+        <label for="end_time">End Time</label>
+        <input type="time" id="end_time" name="end_time" value="{{ classroom[5] }}" required>
+
+        <label>Students</label>
+        <div class="checkbox-list">
+            {% for s in students %}
+            <label class="checkbox-item">
+                <input type="checkbox" name="student_ids" value="{{ s[0] }}" {% if s[0] in enrolled_student_ids %}checked{% endif %}>
+                {{ s[2] }} ({{ s[1] }})
+            </label>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn--primary">Save Changes</button>
+    </form>
+
+    <a href="/classrooms" class="back-link">Back to Classrooms</a>
+</div>
+{% endblock %}

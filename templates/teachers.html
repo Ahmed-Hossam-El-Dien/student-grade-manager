@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Teachers{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card__header">
+    <h1>Teachers</h1>
+</div>
+
+{% if error %}
+<p class="alert">{{ error }}</p>
+{% endif %}
+
+    <table class="student-table">
+    <tr>
+        <th>ID</th>
+        <th>Teacher ID</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    {% for t in teachers %}
+    <tr>
+        <td>{{ t[0] }}</td>
+        <td>{{ t[1] }}</td>
+        <td>{{ t[2] }}</td>
+        <td>{{ t[3] if t[3] else "—" }}</td>
+        <td class="actions-cell">
+            <a href="/teachers/edit/{{ t[0] }}" class="btn btn--small">Edit</a>
+            <form method="POST" action="/teachers/delete/{{ t[0] }}" class="confirm-delete" data-confirm-message="Delete teacher {{ t[2] }}? This cannot be undone.">
+                <button type="submit" class="btn btn--danger btn--small">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="5" class="empty-row">No teachers yet.</td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}

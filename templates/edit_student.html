@@ -23,6 +23,12 @@
         <label for="grade">Grade</label>
         <input type="number" id="grade" name="grade" value="{{ student[4] }}" required min="0" max="100" step="0.1">
 
+        <label for="email">Login Email</label>
+        <input type="email" id="email" name="email" value="{{ student_email }}" required>
+
+        <label for="password">New Password {% if student_email %}(leave blank to keep current){% endif %}</label>
+        <input type="password" id="password" name="password" minlength="6">
+
         <button type="submit" class="btn btn--primary">Save Changes</button>
     </form>
 

@@ -6,7 +6,6 @@
 <div class="card">
     <div class="card__header">
         <h1>Student List</h1>
-        <a href="/add" class="btn btn--accent">+ Add New Student</a>
     </div>
 
     <form method="GET" action="/students" class="search-bar">
@@ -26,28 +25,35 @@
     {% endmacro %}
 
     <table class="student-table">
-        <tr>
-            <th>{{ sort_link("id", "ID") }}</th>
-            <th>{{ sort_link("student_id", "Student ID") }}</th>
-            <th>{{ sort_link("full_name", "Full Name") }}</th>
-            <th>{{ sort_link("age", "Age") }}</th>
-            <th>{{ sort_link("grade", "Grade") }}</th>
-            <th>Actions</th>
-        </tr>
-        {% for student in students %}
-        <tr>
-            <td>{{ student[0] }}</td>
-            <td>{{ student[1] }}</td>
-            <td>{{ student[2] }}</td>
-            <td>{{ student[3] }}</td>
-            <td><span class="grade-badge">{{ student[4] }}</span></td>
-            <td><a href="/edit/{{ student[0] }}" class="btn btn--small">Edit</a></td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="6" class="empty-row">No students found.</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <tr>
+        <th>{{ sort_link("id", "ID") }}</th>
+        <th>{{ sort_link("student_id", "Student ID") }}</th>
+        <th>{{ sort_link("full_name", "Full Name") }}</th>
+        <th>{{ sort_link("age", "Age") }}</th>
+        <th>{{ sort_link("grade", "Grade") }}</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    {% for student in students %}
+    <tr>
+        <td>{{ student[0] }}</td>
+        <td>{{ student[1] }}</td>
+        <td>{{ student[2] }}</td>
+        <td>{{ student[3] }}</td>
+        <td><span class="grade-badge">{{ student[4] }}</span></td>
+        <td>{{ student[5] if student[5] else "—" }}</td>
+        <td class="actions-cell">
+            <a href="/edit/{{ student[0] }}" class="btn btn--small">Edit</a>
+            <form method="POST" action="/delete/{{ student[0] }}" class="confirm-delete" data-confirm-message="Delete {{ student[2] }}? This cannot be undone.">
+                <button type="submit" class="btn btn--danger btn--small">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="7" class="empty-row">No students found.</td>
+    </tr>
+    {% endfor %}
+</table>
 </div>
 {% endblock %}

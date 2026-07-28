@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Welcome, {{ teacher[2] }}</h1>
+</div>
+
+<div class="card">
+    <h2>Your Upcoming Classrooms</h2>
+    {% if classrooms %}
+    <table class="student-table">
+        <tr>
+            <th>Course</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+        {% for c in classrooms %}
+        <tr>
+            <td>{{ c[1] }} ({{ c[2] }})</td>
+            <td>{{ c[3] }}</td>
+            <td>{{ c[4] }} - {{ c[5] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="empty-row">No upcoming classrooms scheduled.</p>
+    {% endif %}
+</div>
+{% endblock %}

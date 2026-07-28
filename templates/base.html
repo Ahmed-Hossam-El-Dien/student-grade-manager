@@ -6,18 +6,69 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header class="site-header">
-        <div class="site-header__inner">
-            <a href="/" class="site-header__brand">Student Grade Manager</a>
-            <nav class="site-header__nav">
-                <a href="/students">Students</a>
-                <a href="/add">Add Student</a>
-            </nav>
-        </div>
-    </header>
+    {% set students_active = request.path == '/students' or request.path == '/add' or request.path.startswith('/edit/') %}
+    {% set teachers_active = request.path.startswith('/teachers') %}
+    {% set courses_active = request.path.startswith('/courses') %}
+    {% set classrooms_active = request.path.startswith('/classrooms') %}
+
+    <button id="menu-toggle" class="menu-toggle" aria-label="Open menu">☰</button>
+
+    <nav id="side-menu" class="side-menu">
+        <a href="/" class="side-menu__brand">Student Grade Manager</a>
+
+{% if session.get('role') == 'admin' %}
+<div class="side-menu__group {% if students_active %}open{% endif %}">
+    <button type="button" class="side-menu__group-toggle">Students</button>
+    <div class="side-menu__submenu">
+        <a href="/students" class="{% if request.path == '/students' %}active{% endif %}">View Students</a>
+        <a href="/add" class="{% if request.path == '/add' %}active{% endif %}">Add New Student</a>
+    </div>
+</div>
+
+<div class="side-menu__group {% if teachers_active %}open{% endif %}">
+    <button type="button" class="side-menu__group-toggle">Teachers</button>
+    <div class="side-menu__submenu">
+        <a href="/teachers" class="{% if request.path == '/teachers' %}active{% endif %}">View Teachers</a>
+        <a href="/teachers/add" class="{% if request.path == '/teachers/add' %}active{% endif %}">Add New Teacher</a>
+    </div>
+</div>
+
+<div class="side-menu__group {% if courses_active %}open{% endif %}">
+    <button type="button" class="side-menu__group-toggle">Courses</button>
+    <div class="side-menu__submenu">
+        <a href="/courses" class="{% if request.path == '/courses' %}active{% endif %}">View Courses</a>
+        <a href="/courses/add" class="{% if request.path == '/courses/add' %}active{% endif %}">Add New Course</a>
+    </div>
+</div>
+
+<div class="side-menu__group {% if classrooms_active %}open{% endif %}">
+    <button type="button" class="side-menu__group-toggle">Classrooms</button>
+    <div class="side-menu__submenu">
+        <a href="/classrooms" class="{% if request.path == '/classrooms' %}active{% endif %}">View Classrooms</a>
+        <a href="/classrooms/add" class="{% if request.path == '/classrooms/add' %}active{% endif %}">Add New Classroom</a>
+    </div>
+</div>
+
+<div class="side-menu__divider"></div>
+{% endif %}
+
+        {% if session.get('role') == 'admin' %}
+        <a href="/" class="side-menu__single-link">Dashboard</a>
+        <a href="/logout" class="side-menu__single-link">Logout</a>
+        {% elif session.get('role') %}
+        <a href="/my/{{ session.get('role') }}" class="side-menu__single-link">My Dashboard</a>
+        <a href="/logout" class="side-menu__single-link">Logout</a>
+        {% else %}
+        <a href="/login" class="side-menu__single-link">Teacher / Student Login</a>
+        {% endif %}
+    </nav>
+
+    <div id="menu-overlay" class="menu-overlay"></div>
 
     <main class="page">
         {% block content %}{% endblock %}
     </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

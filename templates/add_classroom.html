@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Add Classroom{% endblock %}
+
+{% block content %}
+<div class="card card--form">
+    <h1>Add a New Classroom</h1>
+
+    {% if error %}
+    <p class="alert">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="/classrooms/add" class="form">
+        <label for="course_id">Course</label>
+        <select id="course_id" name="course_id" required>
+            <option value="" disabled selected>-- Select a course --</option>
+            {% for c in courses %}
+            <option value="{{ c[0] }}">{{ c[1] }} ({{ c[2] }})</option>
+            {% endfor %}
+        </select>
+
+        <label for="teacher_id">Teacher</label>
+        <select id="teacher_id" name="teacher_id" required>
+            <option value="" disabled selected>-- Select a teacher --</option>
+            {% for t in teachers %}
+            <option value="{{ t[0] }}">{{ t[2] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="session_date">Date</label>
+        <input type="date" id="session_date" name="session_date" required>
+
+        <label for="start_time">Start Time</label>
+        <input type="time" id="start_time" name="start_time" required>
+
+        <label for="end_time">End Time</label>
+        <input type="time" id="end_time" name="end_time" required>
+
+        <label>Students</label>
+        <div class="checkbox-list">
+            {% for s in students %}
+            <label class="checkbox-item">
+                <input type="checkbox" name="student_ids" value="{{ s[0] }}">
+                {{ s[2] }} ({{ s[1] }})
+            </label>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn--primary">Create Classroom</button>
+    </form>
+
+    <a href="/classrooms" class="back-link">Back to Classrooms</a>
+</div>
+{% endblock %}

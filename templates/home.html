@@ -1,11 +1,113 @@
 {% extends "base.html" %}
 
-{% block title %}Student Grade Manager{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <h1>Welcome to the Student Grade Manager</h1>
-    <p>Keep track of every student's name, age, and grade in one place.</p>
-    <a href="/students" class="btn btn--primary">View Students</a>
-</section>
+<h1>Dashboard</h1>
+<p class="dashboard-intro">A quick overview of your Student Grade Manager.</p>
+
+<div class="stats-grid">
+    <a href="/students" class="stat-card">
+        <span class="stat-card__number">{{ student_count }}</span>
+        <span class="stat-card__label">Students</span>
+    </a>
+    <a href="/teachers" class="stat-card">
+        <span class="stat-card__number">{{ teacher_count }}</span>
+        <span class="stat-card__label">Teachers</span>
+    </a>
+    <a href="/courses" class="stat-card">
+        <span class="stat-card__number">{{ course_count }}</span>
+        <span class="stat-card__label">Courses</span>
+    </a>
+    <a href="/classrooms" class="stat-card">
+        <span class="stat-card__number">{{ classroom_count }}</span>
+        <span class="stat-card__label">Classrooms</span>
+    </a>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <h2>Today's Classrooms</h2>
+        {% if active_classrooms %}
+        <table class="student-table">
+            <tr>
+                <th>Course</th>
+                <th>Teacher</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+            {% for c in active_classrooms %}
+            <tr>
+                <td>{{ c.course_name }} ({{ c.course_code }})</td>
+                <td>{{ c.teacher_name }}</td>
+                <td>{{ c.start_time }} - {{ c.end_time }}</td>
+                <td>
+                    {% if c.is_ongoing %}
+                    <span class="badge badge--ongoing">Ongoing now</span>
+                    {% else %}
+                    <span class="badge">Scheduled</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p class="empty-row">No classrooms scheduled for today.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>Students per Course</h2>
+        <canvas id="courseChart" height="220"></canvas>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Top 10 Highest-Grade Students</h2>
+    {% if top_students %}
+    <table class="student-table">
+        <tr>
+            <th>Rank</th>
+            <th>Student ID</th>
+            <th>Full Name</th>
+            <th>Grade</th>
+        </tr>
+        {% for s in top_students %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ s[0] }}</td>
+            <td>{{ s[1] }}</td>
+            <td><span class="grade-badge">{{ s[2] }}</span></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="empty-row">No students yet.</p>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const courseLabels = {{ course_labels | tojson }};
+    const courseCounts = {{ course_counts | tojson }};
+
+    const ctx = document.getElementById('courseChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: courseLabels,
+            datasets: [{
+                label: 'Students enrolled',
+                data: courseCounts,
+                backgroundColor: '#798DC3',
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+</script>
 {% endblock %}

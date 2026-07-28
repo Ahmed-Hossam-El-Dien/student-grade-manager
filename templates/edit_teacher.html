@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Teacher{% endblock %}
+
+{% block content %}
+<div class="card card--form">
+    <h1>Edit Teacher</h1>
+
+    {% if error %}
+    <p class="alert">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="/teachers/edit/{{ teacher[0] }}" class="form">
+        <label for="teacher_id">Teacher ID</label>
+        <input type="text" id="teacher_id" name="teacher_id" value="{{ teacher[1] }}" required>
+
+        <label for="full_name">Full Name</label>
+        <input type="text" id="full_name" name="full_name" value="{{ teacher[2] }}" required>
+
+        <label for="email">Login Email</label>
+        <input type="email" id="email" name="email" value="{{ teacher_email }}" required>
+
+        <label for="password">New Password {% if teacher_email %}(leave blank to keep current){% endif %}</label>
+        <input type="password" id="password" name="password" minlength="6">
+
+        <button type="submit" class="btn btn--primary">Save Changes</button>
+    </form>
+
+    <a href="/teachers" class="back-link">Back to Teachers</a>
+</div>
+{% endblock %}
